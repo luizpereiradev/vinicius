@@ -49,23 +49,23 @@ console.log("dtstart", decodeURIComponent(dtstart));
 console.log("dtend", decodeURIComponent(dtend));
 
 if (md.is('iPhone')) {
-  download(
-    `BEGIN:VCALENDAR
-    VERSION:1.0
-    BEGIN:VEVENT
-    DTSTART:${decodeURIComponent(dtstart)}
-    DTEND:${decodeURIComponent(dtend)}
-    LOCATION:${decodeURIComponent(loc)}
-    DESCRIPTION:${decodeURIComponent(description)}
-    SUMMARY:${decodeURIComponent(summary)}
-    PRIORITY:3
-    END:VEVENT
-    BEGIN:VALARM
-    ACTION:DISPLAY
-    TRIGGER;VALUE=DURATION:-PT20M
-    END:VALARM
-    END:VCALENDAR`
-  )
+download(
+`BEGIN:VCALENDAR
+VERSION:1.0
+BEGIN:VEVENT
+DTSTART:${decodeURIComponent(dtstart)}
+DTEND:${decodeURIComponent(dtend)}
+LOCATION:${decodeURIComponent(loc)}
+DESCRIPTION:${decodeURIComponent(description)}
+SUMMARY:${decodeURIComponent(summary)}
+PRIORITY:3
+END:VEVENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;VALUE=DURATION:-PT20M
+END:VALARM
+END:VCALENDAR`
+)
 } else {
   window.location.href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${decodeURIComponent(summary)}&dates=${decodeURIComponent(dtstart)}/${decodeURIComponent(dtend)}&details=${decodeURIComponent(description)}&location=${decodeURIComponent(loc)}&sf=true&output=xml`
 }
