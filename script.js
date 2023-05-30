@@ -1,15 +1,3 @@
-function copyToClipboard(text) {
-  const textarea = document.createElement('textarea');
-  textarea.value = text;
-  textarea.setAttribute('readonly', '');
-  textarea.style.position = 'absolute';
-  textarea.style.left = '-9999px';
-  document.body.appendChild(textarea);
-  textarea.select();
-  document.execCommand('copy');
-  document.body.removeChild(textarea);
-}
-
 const md = new MobileDetect(window.navigator.userAgent);
 
 console.log(md);
@@ -36,25 +24,15 @@ console.log("dtstart", decodeURIComponent(dtstart));
 console.log("dtend", decodeURIComponent(dtend));
 
 if (md.is('iPhone')) {
-  const fileContent = `BEGIN:VCALENDAR
-    VERSION:1.0
-    BEGIN:VEVENT
-    DTSTART:${decodeURIComponent(dtstart)}
-    DTEND:${decodeURIComponent(dtend)}
-    LOCATION:${decodeURIComponent(loc)}
-    DESCRIPTION:${decodeURIComponent(description)}
-    SUMMARY:${decodeURIComponent(summary)}
-    PRIORITY:3
-    END:VEVENT
-    BEGIN:VALARM
-    ACTION:DISPLAY
-    TRIGGER;VALUE=DURATION:-PT20M
-    END:VALARM
-    END:VCALENDAR`;
+  const encodedSummary = encodeURIComponent(summary);
+  const encodedLocation = encodeURIComponent(loc);
+  const encodedDescription = encodeURIComponent(description);
+  const encodedDTStart = encodeURIComponent(dtstart);
+  const encodedDTEnd = encodeURIComponent(dtend);
 
-  copyToClipboard(fileContent);
-  alert('O conteúdo do arquivo .ics foi copiado para a área de transferência. Por favor, cole-o em seu aplicativo de calendário.');
-
+  const link = `data:text/calendar;charset=utf-8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ADTSTART:${encodedDTStart}%0ADTEND:${encodedDTEnd}%0ASUMMARY:${encodedSummary}%0ADESCRIPTION:${encodedDescription}%0ALOCATION:${encodedLocation}%0AEND:VEVENT%0AEND:VCALENDAR`;
+  
+  window.location.href = link;
 } else {
   window.location.href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${decodeURIComponent(summary)}&dates=${decodeURIComponent(dtstart)}/${decodeURIComponent(dtend)}&details=${decodeURIComponent(description)}&location=${decodeURIComponent(loc)}&sf=true&output=xml`;
 }
