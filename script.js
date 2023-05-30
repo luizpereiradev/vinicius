@@ -1,8 +1,8 @@
-function download(data, filename, type) {
-  const file = new Blob([data], { type: type });
+function download(data) {
+  const file = new Blob([data], { type: 'text/calendar;charset=utf-8' });
 
   if (window.navigator.msSaveOrOpenBlob) {
-    window.navigator.msSaveOrOpenBlob(file, filename);
+    window.navigator.msSaveOrOpenBlob(file, "event.ics");
     return;
   }
 
@@ -10,7 +10,7 @@ function download(data, filename, type) {
   const url = URL.createObjectURL(file);
 
   a.href = url;
-  a.download = filename;
+  a.download = "event.ics";
 
   document.body.appendChild(a);
 
@@ -45,8 +45,7 @@ console.log("description", decodeURIComponent(description));
 console.log("summary", decodeURIComponent(summary));
 
 download(
-`
-BEGIN:VCALENDAR
+`BEGIN:VCALENDAR
 VERSION:1.0
 BEGIN:VEVENT
 DTSTART:20230622T180000
@@ -60,8 +59,5 @@ BEGIN:VALARM
 ACTION:DISPLAY
 TRIGGER;VALUE=DURATION:-PT20M
 END:VALARM
-END:VCALENDAR
-`,
-"event.ics",
-"text/calendar"
+END:VCALENDAR`
 );
