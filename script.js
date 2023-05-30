@@ -1,16 +1,13 @@
 function download(data) {
   const file = new Blob([data], { type: 'text/calendar;charset=utf-8' });
 
-  if (window.navigator.msSaveOrOpenBlob) {
-    window.navigator.msSaveOrOpenBlob(file, "event.ics");
-    return;
-  }
-
   const a = document.createElement("a");
   const url = URL.createObjectURL(file);
 
   a.href = url;
-  a.download = "event.ics";
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer'; // Para segurança
+  a.download = "reserva-unidas.ics";
 
   document.body.appendChild(a);
 
