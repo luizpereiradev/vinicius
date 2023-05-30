@@ -1,41 +1,28 @@
-function download(data) {
-  const file = new Blob([data], { type: 'text/calendar;charset=utf-8' });
-
-  const a = document.createElement("a");
-  const url = URL.createObjectURL(file);
-
-  a.href = url;
-  a.target = '_blank';
-  a.rel = 'noopener noreferrer'; // For safety
-  a.download = "reserva-unidas.ics";
-
-  document.body.appendChild(a);
-
-  a.click();
-
-  setTimeout(function () {
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-  }, 0);
+function copyToClipboard(text) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'absolute';
+  textarea.style.left = '-9999px';
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand('copy');
+  document.body.removeChild(textarea);
 }
 
 const md = new MobileDetect(window.navigator.userAgent);
 
-// more typically we would instantiate with 'window.navigator.userAgent'
-// as user-agent; this string literal is only for better understanding
-
-console.log( md );
-console.log( md.mobile() );          // 'Sony'
-console.log( md.phone() );           // 'Sony'
-console.log( md.tablet() );          // null
-console.log( md.userAgent() );       // 'Safari'
-console.log( md.os() );              // 'AndroidOS'
-console.log( md.is('iPhone') );      // false
-console.log( md.is('bot') );         // false
-console.log( md.version('Webkit') );         // 534.3
-console.log( md.versionStr('Build') );       // '4.1.A.0.562'
-console.log( md.match('playstation|xbox') ); // false
-
+console.log(md);
+console.log(md.mobile());          // 'Sony'
+console.log(md.phone());           // 'Sony'
+console.log(md.tablet());          // null
+console.log(md.userAgent());       // 'Safari'
+console.log(md.os());              // 'AndroidOS'
+console.log(md.is('iPhone'));      // false
+console.log(md.is('bot'));         // false
+console.log(md.version('Webkit'));         // 534.3
+console.log(md.versionStr('Build'));       // '4.1.A.0.562'
+console.log(md.match('playstation|xbox')); // false
 
 const path = window.location.href;
 
@@ -65,10 +52,9 @@ if (md.is('iPhone')) {
     END:VALARM
     END:VCALENDAR`;
 
-  const fileBlob = new Blob([fileContent], { type: 'text/calendar;charset=utf-8' });
-  const fileURL = URL.createObjectURL(fileBlob);
+  copyToClipboard(fileContent);
+  alert('O conteúdo do arquivo .ics foi copiado para a área de transferência. Por favor, cole-o em seu aplicativo de calendário.');
 
-  window.open(fileURL, '_blank');
 } else {
-  window.location.href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${decodeURIComponent(summary)}&dates=${decodeURIComponent(dtstart)}/${decodeURIComponent(dtend)}&details=${decodeURIComponent(description)}&location=${decodeURIComponent(loc)}&sf=true&output=xml`
+  window.location.href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${decodeURIComponent(summary)}&dates=${decodeURIComponent(dtstart)}/${decodeURIComponent(dtend)}&details=${decodeURIComponent(description)}&location=${decodeURIComponent(loc)}&sf=true&output=xml`;
 }
