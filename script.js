@@ -38,26 +38,32 @@ function detectar_mobile() {
 const path = window.location.href;
 
 // Extract event details from the pathname
-const [, , loc, description, summary] = path.split("#/");
+const [, , loc, description, summary, dtstart, dtend] = path.split("#/");
 
 console.log("location", decodeURIComponent(loc));
 console.log("description", decodeURIComponent(description));
 console.log("summary", decodeURIComponent(summary));
+console.log("dtstart", decodeURIComponent(dtstart));
+console.log("dtend", decodeURIComponent(dtend));
 
-download(
-`BEGIN:VCALENDAR
-VERSION:1.0
-BEGIN:VEVENT
-DTSTART:20230622T180000
-DTEND:20230622T230000
-LOCATION:${decodeURIComponent(loc)}
-DESCRIPTION:${decodeURIComponent(description)}
-SUMMARY:${decodeURIComponent(summary)}
-PRIORITY:3
-END:VEVENT
-BEGIN:VALARM
-ACTION:DISPLAY
-TRIGGER;VALUE=DURATION:-PT20M
-END:VALARM
-END:VCALENDAR`
-);
+if(detectar_mobile()){
+    download(
+    `BEGIN:VCALENDAR
+    VERSION:1.0
+    BEGIN:VEVENT
+    DTSTART:${decodeURIComponent(dtstart)}
+    DTEND:${decodeURIComponent(dtend)}
+    LOCATION:${decodeURIComponent(loc)}
+    DESCRIPTION:${decodeURIComponent(description)}
+    SUMMARY:${decodeURIComponent(summary)}
+    PRIORITY:3
+    END:VEVENT
+    BEGIN:VALARM
+    ACTION:DISPLAY
+    TRIGGER;VALUE=DURATION:-PT20M
+    END:VALARM
+    END:VCALENDAR`
+    )
+}else{
+    window.location.href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${decodeURIComponent(summary)}&dates=${decodeURIComponent(dtstart)}/${decodeURIComponent(dtend)}&details=${decodeURIComponent(description)}&location=${decodeURIComponent(loc)}&sf=true&output=xml`
+}
