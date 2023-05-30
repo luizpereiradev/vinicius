@@ -6,7 +6,7 @@ function download(data) {
 
   a.href = url;
   a.target = '_blank';
-  a.rel = 'noopener noreferrer'; // Para segurança
+  a.rel = 'noopener noreferrer'; // For safety
   a.download = "reserva-unidas.ics";
 
   document.body.appendChild(a);
@@ -19,19 +19,23 @@ function download(data) {
   }, 0);
 }
 
-function mobileCheck() {
-  let check = false;
-  (function (a) {
-    if (
-      /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od|ad)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(
-        a.substr(0, 4)
-      ) ||
-      /(iPhone|iPod|iPad)/.test(a)
-    )
-      check = true;
-  })(navigator.userAgent || navigator.vendor || window.opera);
-  return check;
-}
+const md = new MobileDetect(window.navigator.userAgent);
+
+// more typically we would instantiate with 'window.navigator.userAgent'
+// as user-agent; this string literal is only for better understanding
+
+console.log( md );
+console.log( md.mobile() );          // 'Sony'
+console.log( md.phone() );           // 'Sony'
+console.log( md.tablet() );          // null
+console.log( md.userAgent() );       // 'Safari'
+console.log( md.os() );              // 'AndroidOS'
+console.log( md.is('iPhone') );      // false
+console.log( md.is('bot') );         // false
+console.log( md.version('Webkit') );         // 534.3
+console.log( md.versionStr('Build') );       // '4.1.A.0.562'
+console.log( md.match('playstation|xbox') ); // false
+
 
 const path = window.location.href;
 
@@ -44,8 +48,8 @@ console.log("summary", decodeURIComponent(summary));
 console.log("dtstart", decodeURIComponent(dtstart));
 console.log("dtend", decodeURIComponent(dtend));
 
-if(mobileCheck()){
-    download(
+if (md.is('iPhone')) {
+  download(
     `BEGIN:VCALENDAR
     VERSION:1.0
     BEGIN:VEVENT
@@ -61,7 +65,7 @@ if(mobileCheck()){
     TRIGGER;VALUE=DURATION:-PT20M
     END:VALARM
     END:VCALENDAR`
-    )
-}else{
-    window.location.href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${decodeURIComponent(summary)}&dates=${decodeURIComponent(dtstart)}/${decodeURIComponent(dtend)}&details=${decodeURIComponent(description)}&location=${decodeURIComponent(loc)}&sf=true&output=xml`
+  )
+} else {
+  window.location.href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${decodeURIComponent(summary)}&dates=${decodeURIComponent(dtstart)}/${decodeURIComponent(dtend)}&details=${decodeURIComponent(description)}&location=${decodeURIComponent(loc)}&sf=true&output=xml`
 }
