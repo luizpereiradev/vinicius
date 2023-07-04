@@ -52,7 +52,7 @@ END:VALARM
 END:VCALENDAR`;
   
   window.location.href = link;
-} else if (md.mobile()) {
+} else if (!md.mobile()) {
   window.location.href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${decodeURIComponent(summary)}&dates=${decodeURIComponent(dtstart)}/${decodeURIComponent(dtend)}&details=${decodeURIComponent(description)}&location=${decodeURIComponent(loc)}&sf=true&output=xml`;
 }
 else {
